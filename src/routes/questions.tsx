@@ -30,6 +30,14 @@ export default function Questions() {
         </Typography>
         <Button variant="contained">Ask Question</Button>
       </Toolbar>
+      <Toolbar disableGutters>
+        <Typography component="div" sx={{ flexGrow: 1 }} variant="subtitle1">
+          {questions.length} question
+          {questions.length === 1 ? '' : 's'}
+        </Typography>
+        {/* A */}
+      </Toolbar>
+      {/* B */}
       <Stack spacing={2}>
         {questions.map((question: any) => (
           <Card key={question.id}>
