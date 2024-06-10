@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography'
 import {
   Link as RouterLink,
   useLoaderData,
-  useOutletContext,
+  useRouteLoaderData,
 } from 'react-router-dom'
 
 export async function loader() {
@@ -19,7 +19,7 @@ export async function loader() {
 
 export default function Questions() {
   const questions = useLoaderData() as any
-  const tags = useOutletContext() as any
+  const { tags } = useRouteLoaderData('root') as any
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

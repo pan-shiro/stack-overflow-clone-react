@@ -29,6 +29,7 @@ const router = createBrowserRouter([
       },
     ],
     element: <Root />,
+    id: 'root',
     loader: tagsLoader,
     path: '/',
   },
