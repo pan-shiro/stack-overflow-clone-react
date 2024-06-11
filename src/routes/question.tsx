@@ -9,17 +9,67 @@ import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import {
+  Form,
+  useActionData,
   useLoaderData,
   useOutletContext,
+  type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from 'react-router-dom'
 
+function validateAnswerBody(body: string) {
+  if (!body) {
+    return 'Body is missing.'
+  }
+
+  if (body.length < 30) {
+    return `Body must be at least 30 characters; you entered ${body.length}.`
+  }
+}
+
+export async function action({ params, request }: ActionFunctionArgs) {
+  const formData = await request.formData()
+
+  const newAnswer = {
+    body: formData.get('body'),
+    userId: 1,
+  }
+
+  const fieldErrors = {
+    body: validateAnswerBody(newAnswer.body as string),
+  }
+
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return {
+      fieldErrors,
+    }
+  }
+
+  await fetch(`/api/questions/${params.questionId}/answers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newAnswer),
+  })
+
+  return {}
+}
+
 export async function loader({ params }: LoaderFunctionArgs) {
-  return fetch(`/api/questions/${params.questionId}`)
+  const [question, answers] = await Promise.all([
+    fetch(`/api/questions/${params.questionId}`).then((res) => res.json()),
+    fetch(`/api/questions/${params.questionId}/answers`).then((res) =>
+      res.json()
+    ),
+  ])
+
+  return { answers, question }
 }
 
 export default function Question() {
-  const question = useLoaderData() as any
+  const actionData = useActionData() as any
+  const { answers, question } = useLoaderData() as any
   const tags = useOutletContext() as any
 
   return (
@@ -48,20 +98,18 @@ export default function Question() {
 
       <Toolbar disableGutters>
         <Typography component="div" variant="h6">
-          1 Answer
+          {answers.length} Answer{answers.length === 1 ? '' : 's'}
         </Typography>
       </Toolbar>
 
       <Stack spacing={2}>
-        <Card>
-          <CardContent>
-            <Typography color="text.secondary">
-              One of the recommended ways to loop through an array in JavaScript
-              is to use the 'forEach' method. It provides a more concise syntax
-              and handles the iteration automatically. Here's an example:
-            </Typography>
-          </CardContent>
-        </Card>
+        {answers.map((answer: any) => (
+          <Card key={answer.id}>
+            <CardContent>
+              <Typography color="text.secondary">{answer.body}</Typography>
+            </CardContent>
+          </Card>
+        ))}
       </Stack>
 
       <Toolbar disableGutters>
@@ -72,11 +120,16 @@ export default function Question() {
 
       <Card>
         <CardContent>
-          <form id="new-answer" method="post">
-            <TextField fullWidth multiline name="body" rows={4} />
-            {/* Body is missing. */}
-            {/* Body must be at least 30 characters; you entered ${body.length}. */}
-          </form>
+          <Form id="new-answer" method="post">
+            <TextField
+              error={!!actionData?.fieldErrors?.body}
+              fullWidth
+              helperText={actionData?.fieldErrors?.body}
+              multiline
+              name="body"
+              rows={4}
+            />
+          </Form>
         </CardContent>
 
         <CardActions>
