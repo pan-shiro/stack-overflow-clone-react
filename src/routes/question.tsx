@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import {
   Form,
+  Link,
   useActionData,
   useLoaderData,
   useOutletContext,
@@ -79,7 +80,9 @@ export default function Question() {
         <Typography component="div" sx={{ flexGrow: 1 }} variant="h6">
           {question.title}
         </Typography>
-        <Button variant="contained">Ask Question</Button>
+        <Button component={Link} to="/questions/ask" variant="contained">
+          Ask Question
+        </Button>
       </Toolbar>
       <Card>
         <CardContent>
@@ -95,13 +98,11 @@ export default function Question() {
           </Stack>
         </CardContent>
       </Card>
-
       <Toolbar disableGutters>
         <Typography component="div" variant="h6">
           {answers.length} Answer{answers.length === 1 ? '' : 's'}
         </Typography>
       </Toolbar>
-
       <Stack spacing={2}>
         {answers.map((answer: any) => (
           <Card key={answer.id}>
@@ -111,13 +112,11 @@ export default function Question() {
           </Card>
         ))}
       </Stack>
-
       <Toolbar disableGutters>
         <Typography component="div" variant="h6">
           Your Answer
         </Typography>
       </Toolbar>
-
       <Card>
         <CardContent>
           <Form id="new-answer" method="post">
@@ -131,7 +130,6 @@ export default function Question() {
             />
           </Form>
         </CardContent>
-
         <CardActions>
           <Button
             form="new-answer"

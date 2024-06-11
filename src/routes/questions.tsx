@@ -28,7 +28,9 @@ export default function Questions() {
         <Typography component="div" sx={{ flexGrow: 1 }} variant="h6">
           All Questions
         </Typography>
-        <Button variant="contained">Ask Question</Button>
+        <Button component={RouterLink} to="/questions/ask" variant="contained">
+          Ask Question
+        </Button>
       </Toolbar>
       <Toolbar disableGutters>
         <Typography component="div" sx={{ flexGrow: 1 }} variant="subtitle1">
