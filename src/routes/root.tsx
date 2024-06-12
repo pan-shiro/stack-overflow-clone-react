@@ -14,7 +14,13 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { Outlet, useLoaderData } from 'react-router-dom'
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 
 export async function loader() {
   return fetch('/api/tags')
@@ -24,6 +30,8 @@ const drawerWidth = 240
 
 export default function Root() {
   const { tags } = useLoaderData() as any
+  const location = useLocation()
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -33,7 +41,13 @@ export default function Root() {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography component="div" noWrap variant="h6">
+          <Typography
+            component="div"
+            noWrap
+            onClick={() => navigate('/')}
+            sx={{ cursor: 'pointer' }}
+            variant="h6"
+          >
             Stack Overflow Clone
           </Typography>
         </Toolbar>
@@ -53,7 +67,11 @@ export default function Root() {
         <Box sx={{ overflow: 'auto' }}>
           <List>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component={Link}
+                selected={location.pathname === '/'}
+                to="/"
+              >
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -61,7 +79,11 @@ export default function Root() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component={Link}
+                selected={location.pathname.includes('/questions')}
+                to="/questions"
+              >
                 <ListItemIcon>
                   <QuestionAnswerIcon />
                 </ListItemIcon>
