@@ -8,8 +8,42 @@ import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
+import { useState } from 'react'
+import {
+  Form,
+  redirect,
+  useOutletContext,
+  type ActionFunctionArgs,
+} from 'react-router-dom'
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData()
+
+  const tagIds = formData.get('tagIds')
+  const newQuestion = {
+    body: formData.get('body'),
+    tagIds: tagIds !== '' ? tagIds.split(',').map(Number) : [],
+    title: formData.get('title'),
+    userId: 1,
+  }
+
+  const response = await fetch('/api/questions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newQuestion),
+  })
+
+  const { id } = await response.json()
+
+  return redirect(`/questions/${id}`)
+}
 
 export default function Ask() {
+  const tags = useOutletContext() as any
+  const [selectedTagIds, setSelectedTagIds] = useState<any>([])
+
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
       <Toolbar />
@@ -19,7 +53,7 @@ export default function Ask() {
           titleTypographyProps={{ variant: 'h6' }}
         />
         <CardContent>
-          <Stack component="form" id="new-question" method="post" spacing={2}>
+          <Stack component={Form} id="new-question" method="post" spacing={2}>
             <TextField
               autoFocus
               label="Title"
@@ -28,8 +62,12 @@ export default function Ask() {
             />
             <TextField label="Body" multiline name="body" rows={4} />
             <Autocomplete
+              getOptionLabel={(option: number) =>
+                tags.find((tag: any) => tag.id === option)?.name
+              }
               multiple
-              options={[]}
+              onChange={(_, value) => setSelectedTagIds(value)}
+              options={tags.map((tag: any) => tag.id)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -38,6 +76,13 @@ export default function Ask() {
                   variant="outlined"
                 />
               )}
+              value={selectedTagIds}
+            />
+            <input
+              name="tagIds"
+              onChange={() => {}}
+              type="hidden"
+              value={selectedTagIds.join(',')}
             />
           </Stack>
         </CardContent>

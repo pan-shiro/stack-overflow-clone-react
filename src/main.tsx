@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Ask from './routes/ask'
+import Ask, { action as askAction } from './routes/ask'
 import Question, {
   action as questionAction,
   loader as questionLoader,
@@ -32,6 +32,7 @@ const router = createBrowserRouter([
         path: '/questions/:questionId',
       },
       {
+        action: askAction,
         element: <Ask />,
         path: '/questions/ask',
       },
