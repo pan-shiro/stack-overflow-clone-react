@@ -5,6 +5,7 @@ import "@fontsource/roboto/700.css";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Ask, { action as askAction } from "./routes/ask";
+import LeftSidebar from "./routes/left-sidebar";
 import Question, {
   action as questionAction,
   loader as questionLoader,
@@ -16,20 +17,26 @@ const router = createBrowserRouter([
   {
     children: [
       {
-        element: <Questions />,
-        index: true,
-        loader: questionsLoader,
-      },
-      {
-        element: <Questions />,
-        loader: questionsLoader,
-        path: "/questions",
-      },
-      {
-        action: questionAction,
-        element: <Question />,
-        loader: questionLoader,
-        path: "/questions/:questionId",
+        children: [
+          {
+            element: <Questions />,
+            index: true,
+            loader: questionsLoader,
+          },
+          {
+            element: <Questions />,
+            loader: questionsLoader,
+            path: "/questions",
+          },
+          {
+            action: questionAction,
+            element: <Question />,
+            loader: questionLoader,
+            path: "/questions/:questionId",
+          },
+        ],
+        // https://reactrouter.com/en/main/route/route#layout-routes
+        element: <LeftSidebar />,
       },
       {
         action: askAction,
@@ -45,5 +52,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />,
+  <RouterProvider router={router} />
 );
