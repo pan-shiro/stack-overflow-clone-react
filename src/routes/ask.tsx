@@ -19,10 +19,10 @@ import {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
 
-  const tagIds = formData.get('tagIds')
+  const tagIds = formData.get('tagIds') as string | null
   const newQuestion = {
     body: formData.get('body'),
-    tagIds: tagIds !== '' ? tagIds.split(',').map(Number) : [],
+    tagIds: tagIds ? tagIds.split(',').map(Number) : [],
     title: formData.get('title'),
     userId: 1,
   }
