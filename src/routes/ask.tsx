@@ -12,35 +12,79 @@ import { useState } from "react";
 import {
   Form,
   redirect,
+  useActionData,
+  useNavigation,
   useOutletContext,
   type ActionFunctionArgs,
 } from "react-router-dom";
 
+function validateQuestionBody(body: string) {
+  if (!body) {
+    return "Body is missing.";
+  }
+
+  if (body.length < 30) {
+    return `Body must be at least 30 characters; you entered ${body.length}.`;
+  }
+}
+
+function validateQuestionTitle(title: string) {
+  if (!title) {
+    return "Title is missing.";
+  }
+
+  if (title.length < 15) {
+    return "Title must be at least 15 characters.";
+  }
+}
+
+function validateQuestionTagIds(tagIds: number[]) {
+  if (tagIds.length === 0) {
+    return "Please enter at least one tag.";
+  }
+
+  if (tagIds.length > 5) {
+    return "Please enter no more than 5 tags.";
+  }
+}
+
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
-  const tagIds = formData.get("tagIds") as string | null;
+  const tagIds = formData.get("tagIds") as string;
   const newQuestion = {
-    body: formData.get("body"),
-    tagIds: tagIds ? tagIds.split(",").map(Number) : [],
-    title: formData.get("title"),
+    body: formData.get("body") as string,
+    tagIds: tagIds !== "" ? tagIds.split(",").map(Number) : [],
+    title: formData.get("title") as string,
     userId: 1,
   };
 
-  const response = await fetch("/api/questions", {
+  const fieldErrors = {
+    body: validateQuestionBody(newQuestion.body),
+    title: validateQuestionTitle(newQuestion.title),
+    tags: validateQuestionTagIds(newQuestion.tagIds),
+  };
+
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return {
+      fieldErrors,
+    };
+  }
+
+  const question = await fetch("/api/questions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newQuestion),
-  });
+  }).then((res) => res.json());
 
-  const { id } = await response.json();
-
-  return redirect(`/questions/${id}`);
+  return redirect(`/questions/${question.id}`);
 }
 
 export default function Ask() {
+  const actionData = useActionData() as any;
+  const navigation = useNavigation();
   const tags = useOutletContext() as any;
   const [selectedTagIds, setSelectedTagIds] = useState<any>([]);
 
@@ -56,21 +100,41 @@ export default function Ask() {
           <Stack component={Form} id="new-question" method="post" spacing={2}>
             <TextField
               autoFocus
+              error={!!actionData?.fieldErrors?.title}
+              helperText={
+                actionData?.fieldErrors?.title ||
+                "Be specific and imagine you're asking a question to another person"
+              }
               label="Title"
               name="title"
               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
             />
-            <TextField label="Body" multiline name="body" rows={4} />
+            <TextField
+              error={!!actionData?.fieldErrors?.body}
+              helperText={
+                actionData?.fieldErrors?.body ||
+                "Include all the information someone would need to answer your question"
+              }
+              label="Body"
+              multiline
+              name="body"
+              rows={4}
+            />
             <Autocomplete
-              getOptionLabel={(option: number) =>
+              multiple
+              onChange={(_event, value) => setSelectedTagIds(value)}
+              options={tags.map((tag: any) => tag.id)}
+              getOptionLabel={(option) =>
                 tags.find((tag: any) => tag.id === option)?.name
               }
-              multiple
-              onChange={(_, value) => setSelectedTagIds(value)}
-              options={tags.map((tag: any) => tag.id)}
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  error={!!actionData?.fieldErrors?.tags}
+                  helperText={
+                    actionData?.fieldErrors?.tags ||
+                    "Add up to 5 tags to describe what your question is about"
+                  }
                   label="Tags"
                   placeholder="e.g. (database ruby .net)"
                   variant="outlined"
@@ -87,7 +151,12 @@ export default function Ask() {
           </Stack>
         </CardContent>
         <CardActions>
-          <LoadingButton form="new-question" size="small" type="submit">
+          <LoadingButton
+            form="new-question"
+            loading={navigation.state === "submitting"}
+            size="small"
+            type="submit"
+          >
             Post your question
           </LoadingButton>
         </CardActions>
