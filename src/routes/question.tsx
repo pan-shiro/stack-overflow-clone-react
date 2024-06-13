@@ -1,3 +1,4 @@
+import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -13,6 +14,7 @@ import {
   Link,
   useActionData,
   useLoaderData,
+  useNavigation,
   useOutletContext,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -61,7 +63,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const [question, answers] = await Promise.all([
     fetch(`/api/questions/${params.questionId}`).then((res) => res.json()),
     fetch(`/api/questions/${params.questionId}/answers`).then((res) =>
-      res.json(),
+      res.json()
     ),
   ]);
 
@@ -71,6 +73,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function Question() {
   const actionData = useActionData() as any;
   const { answers, question } = useLoaderData() as any;
+  const navigation = useNavigation();
   const tags = useOutletContext() as any;
 
   return (
@@ -121,9 +124,11 @@ export default function Question() {
         <CardContent>
           <Form id="new-answer" method="post">
             <TextField
+              autoFocus
               error={!!actionData?.fieldErrors?.body}
               fullWidth
               helperText={actionData?.fieldErrors?.body}
+              key={Math.random()}
               multiline
               name="body"
               rows={4}
@@ -131,15 +136,14 @@ export default function Question() {
           </Form>
         </CardContent>
         <CardActions>
-          <Button
+          <LoadingButton
             form="new-answer"
-            name="intent"
+            loading={navigation.state === "submitting"}
             size="small"
             type="submit"
-            value="post-answer"
           >
             Post Your Answer
-          </Button>
+          </LoadingButton>
         </CardActions>
       </Card>
     </Box>

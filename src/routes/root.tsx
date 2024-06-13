@@ -18,7 +18,7 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
+  useMatch,
   useNavigate,
 } from "react-router-dom";
 
@@ -30,7 +30,6 @@ const drawerWidth = 240;
 
 export default function Root() {
   const { tags } = useLoaderData() as any;
-  const location = useLocation();
   const navigate = useNavigate();
 
   return (
@@ -69,7 +68,7 @@ export default function Root() {
             <ListItem disablePadding>
               <ListItemButton
                 component={Link}
-                selected={location.pathname === "/"}
+                selected={Boolean(useMatch("/"))}
                 to="/"
               >
                 <ListItemIcon>
@@ -81,7 +80,7 @@ export default function Root() {
             <ListItem disablePadding>
               <ListItemButton
                 component={Link}
-                selected={location.pathname.includes("/questions")}
+                selected={Boolean(useMatch("/questions/*"))}
                 to="/questions"
               >
                 <ListItemIcon>
