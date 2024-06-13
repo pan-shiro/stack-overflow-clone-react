@@ -1,16 +1,16 @@
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Ask, { action as askAction } from './routes/ask'
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Ask, { action as askAction } from "./routes/ask";
 import Question, {
   action as questionAction,
   loader as questionLoader,
-} from './routes/question'
-import Questions, { loader as questionsLoader } from './routes/questions'
-import Root, { loader as tagsLoader } from './routes/root'
+} from "./routes/question";
+import Questions, { loader as questionsLoader } from "./routes/questions";
+import Root, { loader as tagsLoader } from "./routes/root";
 
 const router = createBrowserRouter([
   {
@@ -23,27 +23,27 @@ const router = createBrowserRouter([
       {
         element: <Questions />,
         loader: questionsLoader,
-        path: '/questions',
+        path: "/questions",
       },
       {
         action: questionAction,
         element: <Question />,
         loader: questionLoader,
-        path: '/questions/:questionId',
+        path: "/questions/:questionId",
       },
       {
         action: askAction,
         element: <Ask />,
-        path: '/questions/ask',
+        path: "/questions/ask",
       },
     ],
     element: <Root />,
-    id: 'root',
+    id: "root",
     loader: tagsLoader,
-    path: '/',
+    path: "/",
   },
-])
+]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={router} />
-)
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <RouterProvider router={router} />,
+);

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const sqlite3 = require('sqlite3').verbose()
+const sqlite3 = require("sqlite3").verbose();
 
 const {
   answers,
@@ -8,9 +8,9 @@ const {
   tags,
   users,
   usersTags,
-} = require('./data.cjs')
+} = require("./data.cjs");
 
-const db = new sqlite3.Database(':memory:')
+const db = new sqlite3.Database(":memory:");
 
 db.serialize(() => {
   db.run(
@@ -23,8 +23,8 @@ db.serialize(() => {
       userId INTEGER,
       FOREIGN KEY (questionId) REFERENCES questions(id),
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE filters (
@@ -35,8 +35,8 @@ db.serialize(() => {
       tagModeId TEXT,
       userId INTEGER,
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE lists (
@@ -44,8 +44,8 @@ db.serialize(() => {
       name TEXT,
       userId INTEGER,
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE questions (
@@ -58,8 +58,8 @@ db.serialize(() => {
       userId INTEGER,
       voteCount INTEGER,
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE saved_questions (
@@ -70,8 +70,8 @@ db.serialize(() => {
       FOREIGN KEY (listId) REFERENCES lists(id),
       FOREIGN KEY (questionId) REFERENCES questions(id),
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE questions_tags (
@@ -80,8 +80,8 @@ db.serialize(() => {
       tagId INTEGER,
       FOREIGN KEY (questionId) REFERENCES questions(id),
       FOREIGN KEY (tagId) REFERENCES tags(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE tags (
@@ -90,8 +90,8 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY,
       name TEXT,
       occurrenceCount INTEGER
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE users (
@@ -99,8 +99,8 @@ db.serialize(() => {
       location TEXT,
       name TEXT,
       reputation INTEGER
-    )`
-  )
+    )`,
+  );
 
   // Create the user_preferences table
   db.run(`
@@ -111,7 +111,7 @@ db.serialize(() => {
       userId INTEGER NOT NULL,
       FOREIGN KEY (userId) REFERENCES users(id)
     );
- `)
+ `);
 
   db.run(
     `CREATE TABLE users_tags (
@@ -120,8 +120,8 @@ db.serialize(() => {
       userId INTEGER,
       FOREIGN KEY (tagId) REFERENCES tags(id),
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   db.run(
     `CREATE TABLE watched_tags (
@@ -130,36 +130,36 @@ db.serialize(() => {
       userId INTEGER,
       FOREIGN KEY (tagId) REFERENCES tags(id),
       FOREIGN KEY (userId) REFERENCES users(id)
-    )`
-  )
+    )`,
+  );
 
   const insertAnswers = db.prepare(
-    `INSERT INTO answers (body, createdAt, id, questionId, updatedAt, userId) VALUES (?, ?, ?, ?, ?, ?)`
-  )
+    `INSERT INTO answers (body, createdAt, id, questionId, updatedAt, userId) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
 
   const insertQuestions = db.prepare(
-    `INSERT INTO questions (answerCount, body, createdAt, id, title, updatedAt, userId, voteCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-  )
+    `INSERT INTO questions (answerCount, body, createdAt, id, title, updatedAt, userId, voteCount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  );
 
   const insertQuestionsTags = db.prepare(
     `INSERT INTO questions_tags (id, questionId, tagId)
-    VALUES (?, ?, ?)`
-  )
+    VALUES (?, ?, ?)`,
+  );
 
   const insertTags = db.prepare(
     `INSERT INTO tags (createdAt, description, id, name, occurrenceCount)
-    VALUES (?, ?, ?, ?, ?)`
-  )
+    VALUES (?, ?, ?, ?, ?)`,
+  );
 
   const insertUsers = db.prepare(
     `INSERT INTO users (id, location, name, reputation)
-    VALUES (?, ?, ?, ?)`
-  )
+    VALUES (?, ?, ?, ?)`,
+  );
 
   const insertUsersTags = db.prepare(
     `INSERT INTO users_tags (id, tagId, userId)
-    VALUES (?, ?, ?)`
-  )
+    VALUES (?, ?, ?)`,
+  );
 
   answers.forEach((answer) => {
     insertAnswers.run(
@@ -168,9 +168,9 @@ db.serialize(() => {
       answer.id,
       answer.questionId,
       answer.updatedAt,
-      answer.userId
-    )
-  })
+      answer.userId,
+    );
+  });
 
   questions.forEach((question) => {
     insertQuestions.run(
@@ -181,17 +181,17 @@ db.serialize(() => {
       question.title,
       question.updatedAt,
       question.userId,
-      question.voteCount
-    )
-  })
+      question.voteCount,
+    );
+  });
 
   questionsTags.forEach((questionTag) => {
     insertQuestionsTags.run(
       questionTag.id,
       questionTag.questionId,
-      questionTag.tagId
-    )
-  })
+      questionTag.tagId,
+    );
+  });
 
   tags.forEach((tag) => {
     insertTags.run(
@@ -199,29 +199,29 @@ db.serialize(() => {
       tag.description,
       tag.id,
       tag.name,
-      tag.occurrenceCount
-    )
-  })
+      tag.occurrenceCount,
+    );
+  });
 
   users.forEach((user) => {
-    insertUsers.run(user.id, user.location, user.name, user.reputation)
-  })
+    insertUsers.run(user.id, user.location, user.name, user.reputation);
+  });
 
   db.run(`
    INSERT INTO user_preferences (userId) 
    SELECT id FROM users
- `)
+ `);
 
   usersTags.forEach((userTag) => {
-    insertUsersTags.run(userTag.id, userTag.tagId, userTag.userId)
-  })
+    insertUsersTags.run(userTag.id, userTag.tagId, userTag.userId);
+  });
 
-  insertAnswers.finalize()
-  insertQuestions.finalize()
-  insertQuestionsTags.finalize()
-  insertTags.finalize()
-  insertUsers.finalize()
-  insertUsersTags.finalize()
-})
+  insertAnswers.finalize();
+  insertQuestions.finalize();
+  insertQuestionsTags.finalize();
+  insertTags.finalize();
+  insertUsers.finalize();
+  insertUsersTags.finalize();
+});
 
-module.exports = db
+module.exports = db;
