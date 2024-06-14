@@ -52,9 +52,7 @@ export default function Questions() {
           {questions.length} question
           {questions.length === 1 ? "" : "s"}
         </Typography>
-        {/* A */}
       </Toolbar>
-      {/* B */}
       <Stack spacing={2}>
         {questions.map((question: any) => (
           <Card key={question.id}>
