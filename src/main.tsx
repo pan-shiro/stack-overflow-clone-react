@@ -10,7 +10,10 @@ import Question, {
   action as questionAction,
   loader as questionLoader,
 } from "./routes/question";
-import Questions, { loader as questionsLoader } from "./routes/questions";
+import Questions, {
+  handle as questionsHandle,
+  loader as questionsLoader,
+} from "./routes/questions";
 import RightSidebar from "./routes/right-sidebar";
 import Root, { loader as tagsLoader } from "./routes/root";
 
@@ -23,11 +26,13 @@ const router = createBrowserRouter([
             children: [
               {
                 element: <Questions />,
+                handle: questionsHandle,
                 index: true,
                 loader: questionsLoader,
               },
               {
                 element: <Questions />,
+                handle: questionsHandle,
                 loader: questionsLoader,
                 path: "/questions",
               },

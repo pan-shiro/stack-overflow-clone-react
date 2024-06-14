@@ -4,6 +4,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,10 +14,23 @@ import {
   useLoaderData,
   useOutletContext,
 } from "react-router-dom";
+import WatchedTags from "../components/watched-tags";
 
 export async function loader() {
   return fetch("/api/questions");
 }
+
+export const handle = {
+  rightSidebar: (data: any) => {
+    return (
+      <List>
+        <ListItem>
+          <WatchedTags />
+        </ListItem>
+      </List>
+    );
+  },
+};
 
 export default function Questions() {
   const questions = useLoaderData() as any;
