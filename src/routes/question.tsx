@@ -128,7 +128,6 @@ export default function Question() {
               error={!!actionData?.fieldErrors?.body}
               fullWidth
               helperText={actionData?.fieldErrors?.body}
-              key={Math.random()}
               multiline
               name="body"
               rows={4}

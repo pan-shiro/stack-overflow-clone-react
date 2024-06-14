@@ -105,7 +105,6 @@ export default function Ask() {
                 actionData?.fieldErrors?.title ||
                 "Be specific and imagine you're asking a question to another person"
               }
-              key={Math.random()}
               label="Title"
               name="title"
               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
