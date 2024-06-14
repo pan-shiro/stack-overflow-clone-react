@@ -123,10 +123,8 @@ export default function Ask() {
             <Autocomplete
               multiple
               onChange={(_event, value) => setSelectedTagIds(value)}
-              options={tags.map((tag: any) => tag.id)}
-              getOptionLabel={(option) =>
-                tags.find((tag: any) => tag.id === option)?.name
-              }
+              options={Object.keys(tags)}
+              getOptionLabel={(option) => tags[option].name}
               renderInput={(params) => (
                 <TextField
                   {...params}

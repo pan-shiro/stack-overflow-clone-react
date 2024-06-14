@@ -5,14 +5,18 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Outlet, useLoaderData, useNavigate } from "react-router-dom";
+import { indexBy } from "../lib/utils";
 import theme from "../theme";
 
 export async function loader() {
-  return fetch("/api/tags");
+  const response = await fetch("/api/tags");
+  const { tags } = await response.json();
+
+  return indexBy(tags, "id");
 }
 
 export default function Root() {
-  const { tags } = useLoaderData() as any;
+  const tags = useLoaderData() as any;
   const navigate = useNavigate();
 
   return (

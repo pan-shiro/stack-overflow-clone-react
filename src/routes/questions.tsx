@@ -77,13 +77,13 @@ export default function Questions() {
                 {question.title}
               </Link>
               <Stack direction="row" spacing={1}>
-                {question.tagIds.map((tagId: any) => {
-                  const tag = tags.find((tag: any) => tag.id === tagId);
-
-                  return (
-                    <Chip key={tagId} label={tag.name} onClick={() => {}} />
-                  );
-                })}
+                {question.tagIds.map((tagId: any) => (
+                  <Chip
+                    key={tagId}
+                    label={tags[tagId].name}
+                    onClick={() => {}}
+                  />
+                ))}
               </Stack>
             </CardContent>
           </Card>
