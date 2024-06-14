@@ -11,6 +11,7 @@ import Question, {
   loader as questionLoader,
 } from "./routes/question";
 import Questions, { loader as questionsLoader } from "./routes/questions";
+import RightSidebar from "./routes/right-sidebar";
 import Root, { loader as tagsLoader } from "./routes/root";
 
 const router = createBrowserRouter([
@@ -19,20 +20,26 @@ const router = createBrowserRouter([
       {
         children: [
           {
-            element: <Questions />,
-            index: true,
-            loader: questionsLoader,
-          },
-          {
-            element: <Questions />,
-            loader: questionsLoader,
-            path: "/questions",
-          },
-          {
-            action: questionAction,
-            element: <Question />,
-            loader: questionLoader,
-            path: "/questions/:questionId",
+            children: [
+              {
+                element: <Questions />,
+                index: true,
+                loader: questionsLoader,
+              },
+              {
+                element: <Questions />,
+                loader: questionsLoader,
+                path: "/questions",
+              },
+              {
+                action: questionAction,
+                element: <Question />,
+                loader: questionLoader,
+                path: "/questions/:questionId",
+              },
+            ],
+            // https://reactrouter.com/en/main/route/route#layout-routes
+            element: <RightSidebar />,
           },
         ],
         // https://reactrouter.com/en/main/route/route#layout-routes
