@@ -21,7 +21,7 @@ export async function loader() {
 }
 
 export const handle = {
-  rightSidebar: (data: any) => {
+  rightSidebar: () => {
     return (
       <List>
         <ListItem>

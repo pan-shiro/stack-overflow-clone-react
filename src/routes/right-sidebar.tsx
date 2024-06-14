@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
+import { Fragment } from "react";
 import { Outlet, useMatches, useOutletContext } from "react-router-dom";
 
 const drawerWidth = 320;
@@ -12,7 +13,11 @@ export default function RightSidebar() {
     .filter((match) => Boolean((match.handle as any)?.rightSidebar))
     // now map them into an array of elements, passing the loader
     // data to each one
-    .map((match) => (match.handle as any).rightSidebar(match.data));
+    .map((match, index) => (
+      <Fragment key={index}>
+        {(match.handle as any).rightSidebar(match.data)}
+      </Fragment>
+    ));
 
   return (
     <>
