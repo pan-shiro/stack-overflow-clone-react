@@ -12,20 +12,26 @@ import Typography from "@mui/material/Typography";
 import {
   Link as RouterLink,
   useLoaderData,
+  useMatch,
   useOutletContext,
 } from "react-router-dom";
 import WatchedTags from "../components/watched-tags";
 
 export async function loader() {
-  return fetch("/api/questions");
+  const [questions, watchedTags] = await Promise.all([
+    fetch("/api/questions").then((res) => res.json()),
+    fetch("/api/users/1/watchedTags").then((res) => res.json()),
+  ]);
+
+  return { questions, watchedTags };
 }
 
 export const handle = {
-  rightSidebar: () => {
+  rightSidebar: (data: any) => {
     return (
       <List>
         <ListItem>
-          <WatchedTags />
+          <WatchedTags watchedTags={data.watchedTags} />
         </ListItem>
       </List>
     );
@@ -33,7 +39,8 @@ export const handle = {
 };
 
 export default function Questions() {
-  const questions = useLoaderData() as any;
+  const { questions } = useLoaderData() as any;
+  const showQuestionBody = useMatch("/questions");
   const tags = useOutletContext() as any;
 
   return (
@@ -56,11 +63,11 @@ export default function Questions() {
       <Stack spacing={2}>
         {questions.map((question: any) => (
           <Card key={question.id}>
-            <CardContent>
+            <CardContent sx={{ "&:last-child": { pb: 2 } }}>
               <Stack
                 direction="row"
                 spacing={1}
-                sx={{ alignItems: "center", mb: 1.5 }}
+                sx={{ alignItems: "center", mb: "0.35em" }}
               >
                 <Typography color="text.secondary" sx={{ fontSize: 14 }}>
                   {question.voteCount} vote
@@ -83,12 +90,29 @@ export default function Questions() {
               </Stack>
               <Link
                 component={RouterLink}
-                sx={{ display: "block", mb: 1.5 }}
+                sx={{
+                  display: "block",
+                  mb: showQuestionBody ? undefined : 1.5,
+                }}
                 to={`/questions/${question.id}`}
                 variant="h5"
               >
                 {question.title}
               </Link>
+              {showQuestionBody && (
+                <Typography
+                  sx={{
+                    display: "-webkit-box",
+                    mb: 1.5,
+                    overflow: "hidden",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                  }}
+                  color="text.secondary"
+                >
+                  {question.body}
+                </Typography>
+              )}
               <Stack direction="row" spacing={1}>
                 {question.tagIds.map((tagId: any) => (
                   <Chip

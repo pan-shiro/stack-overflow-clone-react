@@ -88,7 +88,7 @@ export default function Question() {
         </Button>
       </Toolbar>
       <Card>
-        <CardContent>
+        <CardContent sx={{ "&:last-child": { pb: 2 } }}>
           <Typography color="text.secondary" sx={{ mb: 1.5 }}>
             {question.body}
           </Typography>
@@ -107,7 +107,7 @@ export default function Question() {
       <Stack spacing={2}>
         {answers.map((answer: any) => (
           <Card key={answer.id}>
-            <CardContent>
+            <CardContent sx={{ "&:last-child": { pb: 2 } }}>
               <Typography color="text.secondary">{answer.body}</Typography>
             </CardContent>
           </Card>
