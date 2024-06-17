@@ -1,3 +1,4 @@
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -9,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { yellow } from "@mui/material/colors";
 import {
   Link as RouterLink,
   useLoaderData,
@@ -39,7 +41,7 @@ export const handle = {
 };
 
 export default function Questions() {
-  const { questions } = useLoaderData() as any;
+  const { questions, watchedTags } = useLoaderData() as any;
   const showQuestionBody = useMatch("/questions");
   const tags = useOutletContext() as any;
 
@@ -61,70 +63,84 @@ export default function Questions() {
         </Typography>
       </Toolbar>
       <Stack spacing={2}>
-        {questions.map((question: any) => (
-          <Card key={question.id}>
-            <CardContent sx={{ "&:last-child": { pb: 2 } }}>
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{ alignItems: "center", mb: "0.35em" }}
-              >
-                <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                  {question.voteCount} vote
-                  {question.voteCount === 1 ? "" : "s"}
-                </Typography>
-                {question.answerCount > 0 ? (
-                  <Chip
-                    color="success"
-                    label={`${question.answerCount} answer${
-                      question.answerCount === 1 ? "" : "s"
-                    }`}
-                    variant="outlined"
-                  />
-                ) : (
+        {questions.map((question: any) => {
+          const isWatched = question.tagIds.some((tagId: any) =>
+            watchedTags.includes(tagId)
+          );
+
+          return (
+            <Card
+              key={question.id}
+              sx={{ bgcolor: isWatched ? yellow[50] : undefined }}
+            >
+              <CardContent sx={{ "&:last-child": { pb: 2 } }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignItems: "center", mb: "0.35em" }}
+                >
                   <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                    {question.answerCount} answer
-                    {question.answerCount === 1 ? "" : "s"}
+                    {question.voteCount} vote
+                    {question.voteCount === 1 ? "" : "s"}
+                  </Typography>
+                  {question.answerCount > 0 ? (
+                    <Chip
+                      color="success"
+                      label={`${question.answerCount} answer${
+                        question.answerCount === 1 ? "" : "s"
+                      }`}
+                      variant="outlined"
+                    />
+                  ) : (
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      {question.answerCount} answer
+                      {question.answerCount === 1 ? "" : "s"}
+                    </Typography>
+                  )}
+                </Stack>
+                <Link
+                  component={RouterLink}
+                  sx={{
+                    display: "block",
+                    mb: showQuestionBody ? undefined : 1.5,
+                  }}
+                  to={`/questions/${question.id}`}
+                  variant="h5"
+                >
+                  {question.title}
+                </Link>
+                {showQuestionBody && (
+                  <Typography
+                    sx={{
+                      display: "-webkit-box",
+                      mb: 1.5,
+                      overflow: "hidden",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 2,
+                    }}
+                    color="text.secondary"
+                  >
+                    {question.body}
                   </Typography>
                 )}
-              </Stack>
-              <Link
-                component={RouterLink}
-                sx={{
-                  display: "block",
-                  mb: showQuestionBody ? undefined : 1.5,
-                }}
-                to={`/questions/${question.id}`}
-                variant="h5"
-              >
-                {question.title}
-              </Link>
-              {showQuestionBody && (
-                <Typography
-                  sx={{
-                    display: "-webkit-box",
-                    mb: 1.5,
-                    overflow: "hidden",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: 2,
-                  }}
-                  color="text.secondary"
-                >
-                  {question.body}
-                </Typography>
-              )}
-              <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
-                {question.tagIds.map((tagId: any) => (
-                  <Chip
-                    key={tagId}
-                    label={tags[tagId].name}
-                    onClick={() => {}}
-                  />
-                ))}
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
+                <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
+                  {question.tagIds.map((tagId: any) => {
+                    const isWatched = watchedTags.includes(tagId);
+
+                    return (
+                      <Chip
+                        icon={isWatched ? <VisibilityIcon /> : undefined}
+                        key={tagId}
+                        label={tags[tagId].name}
+                        onClick={() => {}}
+                      />
+                    );
+                  })}
+                </Stack>
+              </CardContent>
+            </Card>
+          );
+        })}
       </Stack>
     </Box>
   );
