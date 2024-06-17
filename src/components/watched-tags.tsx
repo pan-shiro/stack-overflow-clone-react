@@ -34,6 +34,20 @@ export default function WatchedTags({ watchedTags }: any) {
     }
   };
 
+  const handleDelete = (tagId: any) => {
+    const formData = new FormData();
+
+    formData.append("redirectTo", location.pathname);
+    formData.append(
+      "watchedTags",
+      watchedTags.filter((watchedTag: any) => watchedTag !== tagId)
+    );
+
+    submit(formData, { action: "/save-watched-tags", method: "post" });
+
+    setPendingTagId(null);
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -55,7 +69,7 @@ export default function WatchedTags({ watchedTags }: any) {
                   key={tagId}
                   label={tags[tagId].name}
                   onClick={() => {}}
-                  onDelete={isEditing ? () => {} : undefined}
+                  onDelete={isEditing ? () => handleDelete(tagId) : undefined}
                 />
               ))}
             </Stack>
