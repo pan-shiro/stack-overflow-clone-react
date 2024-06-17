@@ -92,7 +92,7 @@ export default function Question() {
           <Typography color="text.secondary" sx={{ mb: 1.5 }}>
             {question.body}
           </Typography>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
             {question.tagIds.map((tagId: any) => (
               <Chip key={tagId} label={tags[tagId].name} onClick={() => {}} />
             ))}

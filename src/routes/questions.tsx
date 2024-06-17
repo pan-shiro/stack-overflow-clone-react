@@ -113,7 +113,7 @@ export default function Questions() {
                   {question.body}
                 </Typography>
               )}
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
                 {question.tagIds.map((tagId: any) => (
                   <Chip
                     key={tagId}
