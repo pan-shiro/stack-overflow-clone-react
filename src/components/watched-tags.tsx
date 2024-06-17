@@ -11,10 +11,11 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { useOutletContext, useSubmit } from "react-router-dom";
+import { useLocation, useOutletContext, useSubmit } from "react-router-dom";
 
 export default function WatchedTags({ watchedTags }: any) {
   const isWatching = watchedTags.length > 0;
+  const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const [pendingTagId, setPendingTagId] = useState<string | null>(null);
   const tags = useOutletContext() as any;
@@ -24,6 +25,7 @@ export default function WatchedTags({ watchedTags }: any) {
     if (pendingTagId) {
       const formData = new FormData();
 
+      formData.append("redirectTo", location.pathname);
       formData.append("watchedTags", [...watchedTags, pendingTagId].join(" "));
 
       submit(formData, { action: "/save-watched-tags", method: "post" });
