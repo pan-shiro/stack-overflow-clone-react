@@ -47,7 +47,7 @@ export const handle = {
 export default function Questions() {
   const { questions, watchedTags } = useLoaderData() as any;
   const showQuestionBody = useMatch("/questions");
-  const tags = useOutletContext() as any;
+  const { tags } = useOutletContext() as any;
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

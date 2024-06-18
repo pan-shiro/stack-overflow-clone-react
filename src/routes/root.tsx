@@ -10,9 +10,9 @@ import theme from "../theme";
 
 export async function loader() {
   const response = await fetch("/api/tags");
-  const { tags } = await response.json();
+  const tagsResponse = await response.json();
 
-  return indexBy(tags, "id");
+  return { ...tagsResponse, tags: indexBy(tagsResponse.tags, "id") };
 }
 
 export default function Root() {

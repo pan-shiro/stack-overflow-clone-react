@@ -85,7 +85,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Ask() {
   const actionData = useActionData() as any;
   const navigation = useNavigation();
-  const tags = useOutletContext() as any;
+  const { tags } = useOutletContext() as any;
   const [selectedTagIds, setSelectedTagIds] = useState<any>([]);
 
   return (

@@ -74,7 +74,7 @@ export default function Question() {
   const actionData = useActionData() as any;
   const { answers, question } = useLoaderData() as any;
   const navigation = useNavigation();
-  const tags = useOutletContext() as any;
+  const { tags } = useOutletContext() as any;
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

@@ -57,7 +57,11 @@ export default function LeftSidebar() {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                component={Link}
+                selected={Boolean(useMatch("/tags"))}
+                to="/tags"
+              >
                 <ListItemIcon>
                   <StyleIcon />
                 </ListItemIcon>

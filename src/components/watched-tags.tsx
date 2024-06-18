@@ -18,7 +18,7 @@ export default function WatchedTags({ watchedTags }: any) {
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const [pendingTagId, setPendingTagId] = useState<string | null>(null);
-  const tags = useOutletContext() as any;
+  const { tags } = useOutletContext() as any;
   const submit = useSubmit();
 
   const handleAdd = () => {

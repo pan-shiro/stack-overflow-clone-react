@@ -17,6 +17,7 @@ import Questions, {
 import RightSidebar from "./routes/right-sidebar";
 import Root, { loader as tagsLoader } from "./routes/root";
 import { action as saveWatchedTagsAction } from "./routes/save-watched-tags";
+import Tags from "./routes/tags";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
             ],
             // https://reactrouter.com/en/main/route/route#layout-routes
             element: <RightSidebar />,
+          },
+          {
+            element: <Tags />,
+            path: "/tags",
           },
         ],
         // https://reactrouter.com/en/main/route/route#layout-routes
