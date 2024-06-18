@@ -1,7 +1,9 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
@@ -11,6 +13,8 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { yellow } from "@mui/material/colors";
+import PopupState, { bindHover, bindPopover } from "material-ui-popup-state";
+import HoverPopover from "material-ui-popup-state/HoverPopover";
 import {
   Link as RouterLink,
   useLoaderData,
@@ -126,14 +130,72 @@ export default function Questions() {
                 <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
                   {question.tagIds.map((tagId: any) => {
                     const isWatched = watchedTags.includes(tagId);
+                    const tag = tags[tagId];
 
                     return (
-                      <Chip
-                        icon={isWatched ? <VisibilityIcon /> : undefined}
+                      <PopupState
                         key={tagId}
-                        label={tags[tagId].name}
-                        onClick={() => {}}
-                      />
+                        popupId={`demoPopover${tagId}`}
+                        variant="popover"
+                      >
+                        {(popupState) => (
+                          <div>
+                            <Chip
+                              icon={isWatched ? <VisibilityIcon /> : undefined}
+                              key={tagId}
+                              label={tag.name}
+                              onClick={() => {}}
+                              {...bindHover(popupState)}
+                            />
+                            <HoverPopover
+                              {...bindPopover(popupState)}
+                              anchorOrigin={{
+                                horizontal: "center",
+                                vertical: "bottom",
+                              }}
+                              slotProps={{
+                                paper: {
+                                  sx: {
+                                    maxWidth: 345,
+                                  },
+                                },
+                              }}
+                              transformOrigin={{
+                                horizontal: "center",
+                                vertical: "top",
+                              }}
+                            >
+                              <CardContent>
+                                <Typography
+                                  color="text.secondary"
+                                  gutterBottom
+                                  sx={{ fontSize: 14 }}
+                                >
+                                  {tag.occurrenceCount} question
+                                  {tag.occurrenceCount === 1 ? "" : "s"}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {tag.description}
+                                </Typography>
+                              </CardContent>
+                              <CardActions>
+                                <Button
+                                  size="small"
+                                  startIcon={
+                                    isWatched ? (
+                                      <VisibilityOffIcon />
+                                    ) : (
+                                      <VisibilityIcon />
+                                    )
+                                  }
+                                >
+                                  {isWatched ? "Unwatch" : "Watch"} tag
+                                </Button>
+                              </CardActions>
+                            </HoverPopover>
+                          </div>
+                        )}
+                      </PopupState>
                     );
                   })}
                 </Stack>
