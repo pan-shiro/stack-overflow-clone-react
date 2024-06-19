@@ -19,6 +19,7 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from "react-router-dom";
+import { indexBy } from "../lib/utils";
 
 function validateAnswerBody(body: string) {
   if (!body) {
@@ -74,7 +75,8 @@ export default function Question() {
   const actionData = useActionData() as any;
   const { answers, question } = useLoaderData() as any;
   const navigation = useNavigation();
-  const { tags } = useOutletContext() as any;
+  const tagsResponse = useOutletContext() as any;
+  const tags = indexBy(tagsResponse.tags, "id");
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

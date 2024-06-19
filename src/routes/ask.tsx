@@ -17,6 +17,7 @@ import {
   useOutletContext,
   type ActionFunctionArgs,
 } from "react-router-dom";
+import { indexBy } from "../lib/utils";
 
 function validateQuestionBody(body: string) {
   if (!body) {
@@ -85,7 +86,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Ask() {
   const actionData = useActionData() as any;
   const navigation = useNavigation();
-  const { tags } = useOutletContext() as any;
+  const tagsResponse = useOutletContext() as any;
+  const tags = indexBy(tagsResponse.tags, "id");
   const [selectedTagIds, setSelectedTagIds] = useState<any>([]);
 
   return (

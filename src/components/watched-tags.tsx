@@ -12,13 +12,15 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useLocation, useOutletContext, useSubmit } from "react-router-dom";
+import { indexBy } from "../lib/utils";
 
 export default function WatchedTags({ watchedTags }: any) {
   const isWatching = watchedTags.length > 0;
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const [pendingTagId, setPendingTagId] = useState<string | null>(null);
-  const { tags } = useOutletContext() as any;
+  const tagsResponse = useOutletContext() as any;
+  const tags = indexBy(tagsResponse.tags, "id");
   const submit = useSubmit();
 
   const handleAdd = () => {

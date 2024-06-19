@@ -22,6 +22,7 @@ import {
   useOutletContext,
 } from "react-router-dom";
 import WatchedTags from "../components/watched-tags";
+import { indexBy } from "../lib/utils";
 
 export async function loader() {
   const [questions, watchedTags] = await Promise.all([
@@ -47,7 +48,8 @@ export const handle = {
 export default function Questions() {
   const { questions, watchedTags } = useLoaderData() as any;
   const showQuestionBody = useMatch("/questions");
-  const { tags } = useOutletContext() as any;
+  const tagsResponse = useOutletContext() as any;
+  const tags = indexBy(tagsResponse.tags, "id");
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
