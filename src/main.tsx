@@ -44,6 +44,12 @@ const router = createBrowserRouter([
                 loader: questionLoader,
                 path: "/questions/:questionId",
               },
+              {
+                element: <Questions />,
+                handle: questionsHandle,
+                loader: questionsLoader,
+                path: "/questions/tagged/:tagName",
+              },
             ],
             // https://reactrouter.com/en/main/route/route#layout-routes
             element: <RightSidebar />,

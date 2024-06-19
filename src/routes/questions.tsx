@@ -20,6 +20,7 @@ import {
   useLoaderData,
   useMatch,
   useOutletContext,
+  useParams,
 } from "react-router-dom";
 import WatchedTags from "../components/watched-tags";
 import { indexBy } from "../lib/utils";
@@ -47,16 +48,22 @@ export const handle = {
 
 export default function Questions() {
   const { questions, watchedTags } = useLoaderData() as any;
-  const showQuestionBody = useMatch("/questions");
+  const showQuestionBody = useMatch("/questions/*");
   const tagsResponse = useOutletContext() as any;
   const tags = indexBy(tagsResponse.tags, "id");
+  const { tagName } = useParams();
+
+  const tag = Object.values(tags).find((tag: any) => tag.name === tagName);
+  const filteredQuestions = tag
+    ? questions.filter((question: any) => question.tagIds.includes(tag.id))
+    : questions;
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
       <Toolbar />
       <Toolbar disableGutters>
         <Typography component="div" sx={{ flexGrow: 1 }} variant="h6">
-          All Questions
+          {tagName ? `Questions tagged [${tagName}]` : "All Questions"}
         </Typography>
         <Button component={RouterLink} to="/questions/ask" variant="contained">
           Ask Question
@@ -69,7 +76,7 @@ export default function Questions() {
         </Typography>
       </Toolbar>
       <Stack spacing={2}>
-        {questions.map((question: any) => {
+        {filteredQuestions.map((question: any) => {
           const isWatched = question.tagIds.some((tagId: any) =>
             watchedTags.includes(tagId)
           );
@@ -143,10 +150,12 @@ export default function Questions() {
                         {(popupState) => (
                           <div>
                             <Chip
+                              component={RouterLink}
                               icon={isWatched ? <VisibilityIcon /> : undefined}
                               key={tagId}
                               label={tag.name}
                               onClick={() => {}}
+                              to={`/questions/tagged/${tag.name}`}
                               {...bindHover(popupState)}
                             />
                             <HoverPopover
