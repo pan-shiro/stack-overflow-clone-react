@@ -4,19 +4,34 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Outlet, useLoaderData, useNavigate } from "react-router-dom";
-import { indexBy } from "../lib/utils";
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  type LoaderFunctionArgs,
+} from "react-router-dom";
 import theme from "../theme";
 
-export async function loader() {
-  const response = await fetch("/api/tags");
-  const tagsResponse = await response.json();
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const tab = url.searchParams.get("tab");
+  const page = url.searchParams.get("page") || 1;
 
-  return { ...tagsResponse, tags: indexBy(tagsResponse.tags, "id") };
+  let sortBy = "";
+
+  if (tab === "popular") {
+    sortBy = "popularity";
+  } else if (tab === "name") {
+    sortBy = "name";
+  } else if (tab === "new") {
+    sortBy = "latest";
+  }
+
+  return fetch(`/api/tags?page=${page}${sortBy ? `&sortBy=${sortBy}` : ""}`);
 }
 
 export default function Root() {
-  const tags = useLoaderData() as any;
+  const tagsResponse = useLoaderData() as any;
   const navigate = useNavigate();
 
   return (
@@ -39,7 +54,7 @@ export default function Root() {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Outlet context={tags} />
+        <Outlet context={tagsResponse} />
       </Box>
     </ThemeProvider>
   );

@@ -11,10 +11,30 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 
 export default function Tags() {
-  const { tags } = useOutletContext() as any;
+  const { currentPage, tags, totalPages } = useOutletContext() as any;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") || "popular";
+
+  const handleChangeTab = (_event: any, value: any) => {
+    if (value) {
+      const newSearchParams = new URLSearchParams(searchParams);
+
+      newSearchParams.set("tab", value);
+
+      setSearchParams(newSearchParams);
+    }
+  };
+
+  const handleChangePage = (_event: any, page: any) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.set("page", page);
+
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -37,14 +57,20 @@ export default function Tags() {
           placeholder="Filter by tag name"
         />
         <Box sx={{ flexGrow: 1 }} />
-        <ToggleButtonGroup color="primary" exclusive size="small">
+        <ToggleButtonGroup
+          color="primary"
+          exclusive
+          onChange={handleChangeTab}
+          size="small"
+          value={tab}
+        >
           <ToggleButton value="popular">Popular</ToggleButton>
           <ToggleButton value="name">Name</ToggleButton>
           <ToggleButton value="new">New</ToggleButton>
         </ToggleButtonGroup>
       </Toolbar>
       <Grid container spacing={2}>
-        {Object.values(tags).map((tag: any) => (
+        {tags.map((tag: any) => (
           <Grid key={tag.id} xs={3}>
             <Card>
               <CardContent sx={{ "&:last-child": { pb: 2 } }}>
@@ -75,7 +101,13 @@ export default function Tags() {
         ))}
       </Grid>
       <Toolbar sx={{ justifyContent: "flex-end" }}>
-        <Pagination shape="rounded" variant="outlined" />
+        <Pagination
+          count={totalPages}
+          onChange={handleChangePage}
+          page={currentPage}
+          shape="rounded"
+          variant="outlined"
+        />
       </Toolbar>
     </Box>
   );
