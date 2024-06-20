@@ -1,3 +1,4 @@
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -5,9 +6,11 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import {
   Form,
@@ -90,7 +93,7 @@ export default function Question() {
         </Button>
       </Toolbar>
       <Card>
-        <CardContent sx={{ "&:last-child": { pb: 2 } }}>
+        <CardContent>
           <Typography color="text.secondary" sx={{ mb: 1.5 }}>
             {question.body}
           </Typography>
@@ -100,6 +103,13 @@ export default function Question() {
             ))}
           </Stack>
         </CardContent>
+        <CardActions>
+          <Tooltip title="Save this question.">
+            <IconButton>
+              <BookmarkBorderIcon />
+            </IconButton>
+          </Tooltip>
+        </CardActions>
       </Card>
       <Toolbar disableGutters>
         <Typography component="div" variant="h6">
