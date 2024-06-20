@@ -72,8 +72,8 @@ export default function Questions() {
       </Toolbar>
       <Toolbar disableGutters>
         <Typography component="div" sx={{ flexGrow: 1 }} variant="subtitle1">
-          {questions.length} question
-          {questions.length === 1 ? "" : "s"}
+          {filteredQuestions.length} question
+          {filteredQuestions.length === 1 ? "" : "s"}
         </Typography>
       </Toolbar>
       <Stack spacing={2}>

@@ -11,7 +11,12 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { useLocation, useOutletContext, useSubmit } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useOutletContext,
+  useSubmit,
+} from "react-router-dom";
 import { indexBy } from "../lib/utils";
 
 export default function WatchedTags({ watchedTags }: any) {
@@ -68,10 +73,12 @@ export default function WatchedTags({ watchedTags }: any) {
             <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
               {watchedTags.map((tagId: any) => (
                 <Chip
+                  component={Link}
                   key={tagId}
                   label={tags[tagId].name}
                   onClick={() => {}}
                   onDelete={isEditing ? () => handleDelete(tagId) : undefined}
+                  to={`/questions/tagged/${tags[tagId].name}`}
                 />
               ))}
             </Stack>

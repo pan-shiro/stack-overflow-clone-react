@@ -99,7 +99,13 @@ export default function Question() {
           </Typography>
           <Stack direction="row" flexWrap="wrap" spacing={1} useFlexGap>
             {question.tagIds.map((tagId: any) => (
-              <Chip key={tagId} label={tags[tagId].name} onClick={() => {}} />
+              <Chip
+                component={Link}
+                key={tagId}
+                label={tags[tagId].name}
+                onClick={() => {}}
+                to={`/questions/tagged/${tags[tagId].name}`}
+              />
             ))}
           </Stack>
         </CardContent>

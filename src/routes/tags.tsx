@@ -11,7 +11,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { Link, useOutletContext, useSearchParams } from "react-router-dom";
 
 export default function Tags() {
   const { currentPage, tags, totalPages } = useOutletContext() as any;
@@ -75,9 +75,11 @@ export default function Tags() {
             <Card>
               <CardContent sx={{ "&:last-child": { pb: 2 } }}>
                 <Chip
+                  component={Link}
                   label={tag.name}
                   onClick={() => {}}
                   sx={{ mb: "0.35em" }}
+                  to={`/questions/tagged/${tag.name}`}
                 />
                 <Typography
                   color="text.secondary"
