@@ -53,9 +53,10 @@ export default function Questions() {
   const tags = indexBy(tagsResponse.tags, "id");
   const { tagName } = useParams();
 
-  const tag = Object.values(tags).find((tag: any) => tag.name === tagName);
-  const filteredQuestions = tag
-    ? questions.filter((question: any) => question.tagIds.includes(tag.id))
+  const filteredQuestions = tagName
+    ? questions.filter((question: any) =>
+        question.tagIds.some((tagId: any) => tags[tagId].name === tagName)
+      )
     : questions;
 
   return (
