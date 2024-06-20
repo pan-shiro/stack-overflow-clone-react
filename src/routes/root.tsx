@@ -1,7 +1,9 @@
 import { ThemeProvider } from "@emotion/react";
 import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
+import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {
@@ -52,6 +54,10 @@ export default function Root() {
             >
               Stack Overflow Clone
             </Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton sx={{ p: 0 }}>
+              <Avatar>JD</Avatar>
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Outlet context={tagsResponse} />
