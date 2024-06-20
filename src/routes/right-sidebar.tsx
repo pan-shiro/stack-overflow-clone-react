@@ -24,7 +24,6 @@ export default function RightSidebar() {
       <Outlet context={useOutletContext()} />
       <Drawer
         anchor="right"
-        PaperProps={{ sx: { position: "relative" } }}
         sx={{
           [`& .MuiDrawer-paper`]: {
             boxSizing: "border-box",
